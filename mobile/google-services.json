@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "298829019476",
+    "project_id": "studo-38dbd",
+    "storage_bucket": "studo-38dbd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298829019476:android:a03230a9c2efe6291b70c1",
+        "android_client_info": {
+          "package_name": "com.codiac.studo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298829019476-e4i0jth2kr5vpr40112n0m7m66k92cnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codiac.studo",
+            "certificate_hash": "40a76c6008878e315e86045a387785c5a1f4ee22"
+          }
+        },
+        {
+          "client_id": "298829019476-lpd359homcho0h16t37n6r3usnuhhkra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqRrt9s2Jv_2KLp7YIwN-QD0Z7zs_pv3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298829019476-lpd359homcho0h16t37n6r3usnuhhkra.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

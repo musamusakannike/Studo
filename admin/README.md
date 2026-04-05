@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Studo HQ - Admin Dashboard
 
-## Getting Started
+Production-grade admin dashboard for the Studo educational platform. Manage tutors, students, courses, and financial operations from a single, powerful interface.
 
-First, run the development server:
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Install dependencies
+pnpm install
+
+# Configure environment
+cp .env.example .env.local
+
+# Start development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Dashboard runs on `http://localhost:3001`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✨ **Analytics Dashboard** - Real-time metrics and revenue tracking  
+👥 **User Management** - Comprehensive user and tutor administration  
+📚 **Course Moderation** - Review and approve course content  
+💰 **Financial Control** - Process withdrawals and track transactions  
+⚙️ **System Settings** - Configure platform-wide parameters  
+📋 **Audit Logs** - Complete action history tracking  
+🌓 **Dark/Light Mode** - Seamless theme switching  
+⌨️ **Command Palette** - Quick navigation (Cmd+K)
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui
+- TanStack Query & Table
+- Recharts
+- Framer Motion
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See [SETUP.md](./SETUP.md) for detailed setup instructions, API integration guide, and deployment information.
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/
+  (auth)/          # Authentication pages
+  (dashboard)/     # Protected dashboard routes
+components/
+  ui/              # Reusable UI components
+  dashboard/       # Dashboard-specific components
+lib/
+  api.ts           # API client configuration
+  types.ts         # TypeScript definitions
+  utils.ts         # Utility functions
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Development
+
+```bash
+pnpm dev          # Start dev server
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm lint         # Run ESLint
+```
+
+## Environment Variables
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_APP_NAME=Studo HQ
+```
+
+## License
+
+Proprietary - Studo Platform
