@@ -6,6 +6,7 @@ import Withdrawal from '../models/withdrawal.model';
 import { assignDedicatedVirtualAccount } from '../utils/paystack.util';
 import { calculateWithdrawalCharge, getAdminEmails } from '../utils/helpers.util';
 import { sendWithdrawalRequestNotification } from '../utils/email.util';
+import { notifyWithdrawalSubmitted } from '../utils/push-notification.util';
 import logger from '../utils/logger.util';
 
 export const createWallet = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -171,6 +172,11 @@ export const requestWithdrawal = async (req: AuthRequest, res: Response): Promis
         amount,
         { bankName, accountNumber, accountName }
       );
+    }
+
+    // Push notification to the user
+    if (req.user?.expoPushToken) {
+      notifyWithdrawalSubmitted(req.user.expoPushToken, amount).catch(() => {});
     }
 
     res.status(201).json({

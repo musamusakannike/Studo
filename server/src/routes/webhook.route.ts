@@ -1,7 +1,9 @@
 import { Router, Request, Response } from 'express';
 import Wallet from '../models/wallet.model';
 import Transaction from '../models/transaction.model';
+import User from '../models/user.model';
 import { verifyPaystackWebhook } from '../utils/helpers.util';
+import { notifyWalletCredited, notifyVirtualAccountAssigned } from '../utils/push-notification.util';
 import logger from '../utils/logger.util';
 
 const router: any = Router();
@@ -48,6 +50,12 @@ router.post('/paystack', async (req: Request, res: Response): Promise<void> => {
               },
             });
 
+            // Push notification (fire-and-forget)
+            const user = await User.findById(wallet.user).select('expoPushToken');
+            if (user?.expoPushToken) {
+              notifyWalletCredited(user.expoPushToken, amount, wallet.balance).catch(() => {});
+            }
+
             logger.info('Wallet credited successfully:', { 
               walletId: wallet._id, 
               amount 
@@ -68,6 +76,16 @@ router.post('/paystack', async (req: Request, res: Response): Promise<void> => {
           wallet.dedicatedAccountId = data.dedicated_account.id;
           wallet.isActive = true;
           await wallet.save();
+
+          // Push notification (fire-and-forget)
+          const user = await User.findById(wallet.user).select('expoPushToken');
+          if (user?.expoPushToken) {
+            notifyVirtualAccountAssigned(
+              user.expoPushToken,
+              wallet.accountNumber!,
+              wallet.bankName!
+            ).catch(() => {});
+          }
 
           logger.info('Dedicated account assigned:', { 
             walletId: wallet._id, 

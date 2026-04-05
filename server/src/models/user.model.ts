@@ -9,6 +9,7 @@ export interface IUser extends Document {
   authProvider: 'local' | 'google' | 'apple';
   profileImage?: string;
   isVerified: boolean;
+  expoPushToken?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   tutorApplicationStatus?: 'pending' | 'approved' | 'rejected';
@@ -51,6 +52,9 @@ const userSchema = new Schema<IUser>(
       default: 'local',
     },
     profileImage: {
+      type: String,
+    },
+    expoPushToken: {
       type: String,
     },
     isVerified: {

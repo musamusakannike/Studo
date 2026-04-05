@@ -338,3 +338,37 @@ export const getProfile = async (req: AuthRequest, res: Response): Promise<void>
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const registerPushToken = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    const { expoPushToken } = req.body;
+
+    if (!expoPushToken) {
+      res.status(400).json({ success: false, message: 'expoPushToken is required' });
+      return;
+    }
+
+    const { Expo } = await import('expo-server-sdk');
+    if (!Expo.isExpoPushToken(expoPushToken)) {
+      res.status(400).json({ success: false, message: 'Invalid Expo push token format' });
+      return;
+    }
+
+    await User.findByIdAndUpdate(userId, { expoPushToken });
+
+    res.json({ success: true, message: 'Push token registered successfully' });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const removePushToken = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    await User.findByIdAndUpdate(userId, { $unset: { expoPushToken: '' } });
+    res.json({ success: true, message: 'Push token removed successfully' });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

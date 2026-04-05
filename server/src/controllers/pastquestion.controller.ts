@@ -7,6 +7,11 @@ import Transaction from '../models/transaction.model';
 import User from '../models/user.model';
 import { addMonthsToDate, calculateTutorEarning } from '../utils/helpers.util';
 import { sendPastQuestionPurchaseNotification } from '../utils/email.util';
+import {
+  notifyPastQuestionPurchase,
+  notifyQuizPassed,
+  notifyTutorEarning,
+} from '../utils/push-notification.util';
 
 export const createPastQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -209,6 +214,24 @@ export const purchasePastQuestion = async (req: AuthRequest, res: Response): Pro
         pastQuestion.price,
         creatorEarning
       );
+      // Push notification to creator
+      if (creator.expoPushToken) {
+        notifyPastQuestionPurchase(
+          creator.expoPushToken,
+          pastQuestion.title,
+          req.user?.fullName || 'A student',
+          creatorEarning
+        ).catch(() => {});
+      }
+    }
+
+    // Push notification to buyer confirming purchase
+    if (req.user?.expoPushToken) {
+      notifyTutorEarning(
+        req.user.expoPushToken,
+        pastQuestion.price,
+        `purchasing "${pastQuestion.title}"`
+      ).catch(() => {});
     }
 
     res.status(201).json({
@@ -349,6 +372,15 @@ export const submitPastQuestion = async (req: AuthRequest, res: Response): Promi
         }
         await access.save();
       }
+    }
+
+    // Push notification if passed
+    if (passed && req.user?.expoPushToken) {
+      notifyQuizPassed(
+        req.user.expoPushToken,
+        pastQuestion.title,
+        score
+      ).catch(() => {});
     }
 
     res.json({

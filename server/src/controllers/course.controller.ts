@@ -7,6 +7,11 @@ import Transaction from '../models/transaction.model';
 import { addMonthsToDate, calculateTutorEarning } from '../utils/helpers.util';
 import { sendCourseEnrollmentNotification } from '../utils/email.util';
 import User from '../models/user.model';
+import {
+  notifyCourseEnrollment,
+  notifyQuizPassed,
+  notifyTutorEarning,
+} from '../utils/push-notification.util';
 
 export const createCourse = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -253,6 +258,24 @@ export const enrollInCourse = async (req: AuthRequest, res: Response): Promise<v
         course.price,
         tutorEarning
       );
+      // Push notification to tutor
+      if (tutor.expoPushToken) {
+        notifyCourseEnrollment(
+          tutor.expoPushToken,
+          course.title,
+          req.user?.fullName || 'A student',
+          tutorEarning
+        ).catch(() => {});
+      }
+    }
+
+    // Push notification to the enrolling student
+    if (req.user?.expoPushToken) {
+      notifyTutorEarning(
+        req.user.expoPushToken,
+        course.price,
+        `enrolling in "${course.title}"`
+      ).catch(() => {});
     }
 
     res.status(201).json({
@@ -395,6 +418,11 @@ export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     await enrollment.save();
+
+    // Push notification if quiz passed
+    if (passed && req.user?.expoPushToken) {
+      notifyQuizPassed(req.user.expoPushToken, lesson.title, score).catch(() => {});
+    }
 
     res.json({
       success: true,

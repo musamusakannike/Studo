@@ -21,5 +21,7 @@ router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), aut
 router.post('/reset-password', authLimiter, validate(resetPasswordSchema), authController.resetPassword);
 router.post('/apply-tutor', authenticate, validate(applyTutorSchema), authController.applyForTutor);
 router.get('/profile', authenticate, authController.getProfile);
+router.post('/push-token', authenticate, authController.registerPushToken);
+router.delete('/push-token', authenticate, authController.removePushToken);
 
 export default router;

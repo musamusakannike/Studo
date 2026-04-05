@@ -6,6 +6,11 @@ import PastQuestion from '../models/pastquestion.model';
 import Transaction from '../models/transaction.model';
 import Withdrawal from '../models/withdrawal.model';
 import Wallet from '../models/wallet.model';
+import {
+  notifyTutorApplicationApproved,
+  notifyTutorApplicationRejected,
+  notifyWithdrawalProcessed,
+} from '../utils/push-notification.util';
 
 export const getAllUsers = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -101,6 +106,11 @@ export const approveTutorApplication = async (req: AuthRequest, res: Response): 
       });
     }
 
+    // Push notification
+    if (user.expoPushToken) {
+      notifyTutorApplicationApproved(user.expoPushToken).catch(() => {});
+    }
+
     res.json({
       success: true,
       message: 'Tutor application approved successfully',
@@ -143,6 +153,11 @@ export const rejectTutorApplication = async (req: AuthRequest, res: Response): P
         balanceAfter: wallet.balance,
         metadata: { reason: 'Tutor application refund' },
       });
+    }
+
+    // Push notification
+    if (user.expoPushToken) {
+      notifyTutorApplicationRejected(user.expoPushToken).catch(() => {});
     }
 
     res.json({
@@ -371,6 +386,17 @@ export const processWithdrawal = async (req: AuthRequest, res: Response): Promis
     if (transaction) {
       transaction.status = status === 'approved' ? 'success' : 'failed';
       await transaction.save();
+    }
+
+    // Push notification to the withdrawal owner
+    const withdrawalUser = await User.findById(withdrawal.user).select('expoPushToken');
+    if (withdrawalUser?.expoPushToken) {
+      notifyWithdrawalProcessed(
+        withdrawalUser.expoPushToken,
+        withdrawal.amount,
+        status as 'approved' | 'rejected',
+        status === 'rejected' ? rejectionReason : undefined
+      ).catch(() => {});
     }
 
     res.json({
