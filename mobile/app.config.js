@@ -33,6 +33,14 @@ module.exports = {
     plugins: [
       "expo-router",
       [
+        "expo-notifications",
+        {
+          icon: "./assets/images/notification-icon.png",
+          color: "#2563EB",
+          sounds: []
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           image: "./assets/images/splash-icon.png",
