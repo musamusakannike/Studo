@@ -1,0 +1,463 @@
+{
+  "info": {
+    "name": "Studo API",
+    "description": "Complete API collection for Studo Ed-Tech Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/register"}
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/login"}
+          }
+        },
+        {
+          "name": "Google Auth",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"your-google-id-token\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/google"}
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/forgot-password"}
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset-token\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/reset-password"}
+          }
+        },
+        {
+          "name": "Apply for Tutor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bio\": \"Experienced educator with 5 years of teaching experience\",\n  \"expertise\": [\"Mathematics\", \"Physics\"],\n  \"qualifications\": \"BSc Mathematics, MSc Education\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/apply-tutor"}
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/auth/profile"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "Create Wallet",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/wallet/create"}
+          }
+        },
+        {
+          "name": "Get Wallet",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/wallet"}
+          }
+        },
+        {
+          "name": "Get Transaction History",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/wallet/transactions?page=1&limit=20"}
+          }
+        },
+        {
+          "name": "Request Withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 5000,\n  \"bankName\": \"GTBank\",\n  \"accountNumber\": \"0123456789\",\n  \"accountName\": \"John Doe\",\n  \"bankCode\": \"058\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/wallet/withdraw"}
+          }
+        },
+        {
+          "name": "Get Withdrawals",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/wallet/withdrawals?page=1&limit=20"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Create Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Introduction to Calculus\",\n  \"courseCode\": \"MTH101\",\n  \"description\": \"Learn the fundamentals of calculus\",\n  \"level\": \"100\",\n  \"price\": 5000,\n  \"requireSequentialCompletion\": false\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/courses"}
+          }
+        },
+        {
+          "name": "Get All Courses",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/courses?level=100&search=calculus&page=1&limit=20"}
+          }
+        },
+        {
+          "name": "Get Course by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/courses/:courseId"}
+          }
+        },
+        {
+          "name": "Enroll in Course",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/courses/:courseId/enroll"}
+          }
+        },
+        {
+          "name": "Get My Courses",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/courses/my-courses?page=1&limit=20"}
+          }
+        },
+        {
+          "name": "Rate Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Excellent course!\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/courses/:courseId/rate"}
+          }
+        },
+        {
+          "name": "Add Lesson",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Introduction to Limits\",\n  \"description\": \"Understanding limits\",\n  \"order\": 0,\n  \"isActive\": true,\n  \"contents\": [\n    {\n      \"type\": \"text\",\n      \"value\": \"Limits are fundamental to calculus\",\n      \"order\": 0\n    }\n  ]\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/courses/:courseId/lessons"}
+          }
+        },
+        {
+          "name": "Submit Quiz",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [0, 1, 2],\n  \"timeSpent\": 300\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/courses/:courseId/lessons/:lessonIndex/quiz"}
+          }
+        },
+        {
+          "name": "Complete Lesson",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/courses/:courseId/lessons/:lessonIndex/complete"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Past Questions",
+      "item": [
+        {
+          "name": "Create Past Question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"MTH101 2023 Exam\",\n  \"description\": \"Past questions for MTH101\",\n  \"level\": \"100\",\n  \"isFree\": false,\n  \"price\": 1000,\n  \"passMark\": 50,\n  \"timeLimit\": 3600,\n  \"questions\": [\n    {\n      \"questionText\": \"What is 2+2?\",\n      \"options\": [\"3\", \"4\", \"5\"],\n      \"correctOption\": 1\n    }\n  ]\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/past-questions"}
+          }
+        },
+        {
+          "name": "Get All Past Questions",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/past-questions?level=100&page=1&limit=20"}
+          }
+        },
+        {
+          "name": "Get Past Question by ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/past-questions/:pastQuestionId"}
+          }
+        },
+        {
+          "name": "Purchase Past Question",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/past-questions/:pastQuestionId/purchase"}
+          }
+        },
+        {
+          "name": "Get My Past Questions",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/past-questions/my-past-questions"}
+          }
+        },
+        {
+          "name": "Attempt Past Question",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/past-questions/:pastQuestionId/attempt"}
+          }
+        },
+        {
+          "name": "Submit Past Question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [1, 0, 2],\n  \"timeSpent\": 1800\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/past-questions/:pastQuestionId/submit"}
+          }
+        },
+        {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{baseUrl}}/past-questions/:pastQuestionId/leaderboard"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/dashboard"}
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/users?page=1&limit=20"}
+          }
+        },
+        {
+          "name": "Get Tutor Applications",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/tutor-applications?status=pending"}
+          }
+        },
+        {
+          "name": "Approve Tutor Application",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/tutor-applications/:userId/approve"}
+          }
+        },
+        {
+          "name": "Reject Tutor Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Insufficient qualifications\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/admin/tutor-applications/:userId/reject"}
+          }
+        },
+        {
+          "name": "Get All Withdrawals",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/withdrawals?status=pending"}
+          }
+        },
+        {
+          "name": "Process Withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/admin/withdrawals/:withdrawalId/process"}
+          }
+        },
+        {
+          "name": "Toggle Course Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/courses/:courseId/toggle-status"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "Upload Single File",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "file", "type": "file", "src": ""},
+                {"key": "folder", "value": "course-banners", "type": "text"}
+              ]
+            },
+            "url": {"raw": "{{baseUrl}}/upload/single"}
+          }
+        },
+        {
+          "name": "Upload Multiple Files",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "files", "type": "file", "src": ""},
+                {"key": "folder", "value": "lesson-content", "type": "text"}
+              ]
+            },
+            "url": {"raw": "{{baseUrl}}/upload/multiple"}
+          }
+        }
+      ]
+    }
+  ]
+}
