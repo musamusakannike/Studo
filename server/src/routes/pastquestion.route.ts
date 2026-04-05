@@ -8,7 +8,7 @@ import {
   submitPastQuestionSchema,
 } from '../validations/pastquestion.validation';
 
-const router = Router();
+const router: any = Router();
 
 router.post('/', authenticate, validate(createPastQuestionSchema), pastQuestionController.createPastQuestion);
 router.put('/:pastQuestionId', authenticate, validate(updatePastQuestionSchema), pastQuestionController.updatePastQuestion);

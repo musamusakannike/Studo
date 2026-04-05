@@ -47,13 +47,14 @@ export const getAllUsers = async (req: AuthRequest, res: Response): Promise<void
 export const getTutorApplications = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { page = 1, limit = 20, status = 'pending' } = req.query;
+    const statusStr = String(status);
 
-    const users = await User.find({ tutorApplicationStatus: status })
+    const users = await User.find({ tutorApplicationStatus: statusStr })
       .sort({ 'tutorApplicationDetails.appliedAt': -1 })
       .limit(Number(limit))
       .skip((Number(page) - 1) * Number(limit));
 
-    const total = await User.countDocuments({ tutorApplicationStatus: status });
+    const total = await User.countDocuments({ tutorApplicationStatus: statusStr });
 
     res.json({
       success: true,
@@ -112,7 +113,6 @@ export const approveTutorApplication = async (req: AuthRequest, res: Response): 
 export const rejectTutorApplication = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
-    const { reason } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -309,14 +309,15 @@ export const getAllTransactions = async (req: AuthRequest, res: Response): Promi
 export const getAllWithdrawals = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { page = 1, limit = 50, status = 'pending' } = req.query;
+    const statusStr = String(status);
 
-    const withdrawals = await Withdrawal.find({ status })
+    const withdrawals = await Withdrawal.find({ status: statusStr })
       .populate('user', 'fullName email')
       .sort({ createdAt: -1 })
       .limit(Number(limit))
       .skip((Number(page) - 1) * Number(limit));
 
-    const total = await Withdrawal.countDocuments({ status });
+    const total = await Withdrawal.countDocuments({ status: statusStr });
 
     res.json({
       success: true,
@@ -353,7 +354,7 @@ export const processWithdrawal = async (req: AuthRequest, res: Response): Promis
     }
 
     withdrawal.status = status;
-    withdrawal.processedBy = adminId;
+    withdrawal.processedBy = adminId!;
     withdrawal.processedAt = new Date();
     if (status === 'rejected') {
       withdrawal.rejectionReason = rejectionReason;
@@ -381,7 +382,7 @@ export const processWithdrawal = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const getDashboardStats = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getDashboardStats = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const totalUsers = await User.countDocuments();
     const totalTutors = await User.countDocuments({ role: 'tutor' });

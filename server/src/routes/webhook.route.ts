@@ -1,11 +1,10 @@
 import { Router, Request, Response } from 'express';
-import crypto from 'crypto';
 import Wallet from '../models/wallet.model';
 import Transaction from '../models/transaction.model';
 import { verifyPaystackWebhook } from '../utils/helpers.util';
 import logger from '../utils/logger.util';
 
-const router = Router();
+const router: any = Router();
 
 router.post('/paystack', async (req: Request, res: Response): Promise<void> => {
   try {

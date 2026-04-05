@@ -151,11 +151,10 @@ const pastQuestionSchema = new Schema<IPastQuestion>(
   }
 );
 
-pastQuestionSchema.pre('save', function (next) {
+pastQuestionSchema.pre('save', function () {
   if (this.isModified('title')) {
     this.slug = slugify(this.title, { lower: true, strict: true });
   }
-  next();
 });
 
 pastQuestionSchema.plugin(mongoosePaginate);

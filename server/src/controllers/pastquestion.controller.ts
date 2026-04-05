@@ -320,7 +320,7 @@ export const submitPastQuestion = async (req: AuthRequest, res: Response): Promi
 
     if (pastQuestion.isFree) {
       pastQuestion.leaderboard.push({
-        user: userId,
+        user: userId!,
         score,
         timeToComplete: timeSpent,
         attemptedAt: new Date(),

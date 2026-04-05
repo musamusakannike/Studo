@@ -11,7 +11,7 @@ import {
   applyTutorSchema,
 } from '../validations/auth.validation';
 
-const router = Router();
+const router: any = Router();
 
 router.post('/register', authLimiter, validate(registerSchema), authController.register);
 router.post('/login', authLimiter, validate(loginSchema), authController.login);

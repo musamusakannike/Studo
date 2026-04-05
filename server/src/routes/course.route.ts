@@ -10,7 +10,7 @@ import {
   submitQuizSchema,
 } from '../validations/course.validation';
 
-const router = Router();
+const router: any = Router();
 
 router.post('/', authenticate, authorize('tutor', 'admin'), validate(createCourseSchema), courseController.createCourse);
 router.put('/:courseId', authenticate, authorize('tutor', 'admin'), validate(updateCourseSchema), courseController.updateCourse);

@@ -238,7 +238,7 @@ const courseSchema = new Schema<ICourse>(
   }
 );
 
-courseSchema.pre('save', function (next) {
+courseSchema.pre('save', function () {
   if (this.isModified('title') || this.isModified('courseCode')) {
     this.slug = slugify(`${this.title}-${this.courseCode}`, { lower: true, strict: true });
   }
@@ -247,8 +247,6 @@ courseSchema.pre('save', function (next) {
     const sum = this.ratings.reduce((acc, rating) => acc + rating.rating, 0);
     this.averageRating = sum / this.ratings.length;
   }
-  
-  next();
 });
 
 courseSchema.plugin(mongoosePaginate);

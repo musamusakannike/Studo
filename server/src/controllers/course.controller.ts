@@ -319,7 +319,7 @@ export const rateCourse = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     course.ratings.push({
-      user: userId,
+      user: userId!,
       rating,
       comment,
       createdAt: new Date(),
@@ -342,7 +342,7 @@ export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void>
   try {
     const { courseId, lessonIndex } = req.params;
     const userId = req.user?._id;
-    const { answers, timeSpent } = req.body;
+    const { answers } = req.body;
 
     const enrollment = await Enrollment.findOne({ user: userId, course: courseId, isActive: true });
     if (!enrollment) {

@@ -5,7 +5,7 @@ import { validate } from '../middleware/validate.middleware';
 import { walletLimiter } from '../middleware/ratelimit.middleware';
 import { requestWithdrawalSchema } from '../validations/wallet.validation';
 
-const router = Router();
+const router: any = Router();
 
 router.post('/create', authenticate, walletLimiter, walletController.createWallet);
 router.get('/', authenticate, walletController.getWallet);
