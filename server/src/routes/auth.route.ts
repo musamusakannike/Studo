@@ -15,6 +15,7 @@ const router: any = Router();
 
 router.post('/register', authLimiter, validate(registerSchema), authController.register);
 router.post('/login', authLimiter, validate(loginSchema), authController.login);
+router.post('/admin/login', authLimiter, validate(loginSchema), authController.adminLogin);
 router.post('/google', authLimiter, authController.googleAuth);
 router.post('/apple', authLimiter, authController.appleAuth);
 router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), authController.forgotPassword);

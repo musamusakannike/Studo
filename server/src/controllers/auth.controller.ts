@@ -102,6 +102,42 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
+export const adminLogin = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email, role: 'admin' }).select('+password');
+    if (!user) {
+      res.status(401).json({ success: false, message: 'Invalid admin credentials' });
+      return;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password || '');
+    if (!isPasswordValid) {
+      res.status(401).json({ success: false, message: 'Invalid admin credentials' });
+      return;
+    }
+
+    const token = generateToken(user._id.toString());
+
+    res.json({
+      success: true,
+      message: 'Admin login successful',
+      data: {
+        user: {
+          id: user._id,
+          fullName: user.fullName,
+          email: user.email,
+          role: user.role,
+        },
+        token,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const googleAuth = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { idToken } = req.body;
