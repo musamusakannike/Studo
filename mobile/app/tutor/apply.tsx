@@ -30,7 +30,7 @@ export default function TutorApplicationScreen() {
 
     if (!formData.bio.trim()) {
       newErrors.bio = 'Bio is required';
-    } else if (formData.bio.length < 50) {
+    } else if (formData.bio.trim().length < 50) {
       newErrors.bio = 'Bio must be at least 50 characters';
     }
 
@@ -40,6 +40,8 @@ export default function TutorApplicationScreen() {
 
     if (!formData.qualifications.trim()) {
       newErrors.qualifications = 'Qualifications are required';
+    } else if (formData.qualifications.trim().length < 20) {
+      newErrors.qualifications = 'Qualifications must be at least 20 characters';
     }
 
     setErrors(newErrors);
@@ -50,11 +52,13 @@ export default function TutorApplicationScreen() {
     if (!validateForm()) return;
 
     setLoading(true);
+    setErrors({}); // Clear any previous errors
+
     try {
       const response = await authService.applyForTutor({
-        bio: formData.bio,
-        expertise: formData.expertise.split(',').map((e) => e.trim()),
-        qualifications: formData.qualifications,
+        bio: formData.bio.trim(),
+        expertise: formData.expertise.split(',').map((e) => e.trim()).filter(e => e !== ''),
+        qualifications: formData.qualifications.trim(),
       });
 
       if (response.success) {
@@ -63,7 +67,19 @@ export default function TutorApplicationScreen() {
         router.back();
       }
     } catch (error: any) {
-      showToast('error', error.response?.data?.message || 'Failed to submit application');
+      const serverErrors = error.response?.data?.errors;
+      if (serverErrors && Array.isArray(serverErrors)) {
+        const mappedErrors: Record<string, string> = {};
+        serverErrors.forEach((err: any) => {
+          // Map field errors like 'expertise.0' back to 'expertise'
+          const fieldName = err.field.split('.')[0];
+          mappedErrors[fieldName] = err.message;
+        });
+        setErrors(mappedErrors);
+        showToast('error', 'Please fix the errors below');
+      } else {
+        showToast('error', error.response?.data?.message || 'Failed to submit application');
+      }
     } finally {
       setLoading(false);
     }

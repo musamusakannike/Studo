@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://studo-wa2o.onrender.com/api";
+export const API_BASE_URL = "http://172.20.10.5:5000/api";
 
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'auth_token',

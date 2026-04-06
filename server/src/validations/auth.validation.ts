@@ -22,6 +22,6 @@ export const resetPasswordSchema = z.object({
 
 export const applyTutorSchema = z.object({
   bio: z.string().min(50, 'Bio must be at least 50 characters'),
-  expertise: z.array(z.string()).min(1, 'At least one area of expertise is required'),
+  expertise: z.array(z.string().min(1, 'Expertise items cannot be empty')).min(1, 'At least one area of expertise is required'),
   qualifications: z.string().min(20, 'Qualifications must be at least 20 characters'),
 });
