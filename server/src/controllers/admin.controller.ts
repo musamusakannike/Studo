@@ -157,7 +157,8 @@ export const rejectTutorApplication = async (req: AuthRequest, res: Response): P
 
     // Push notification
     if (user.expoPushToken) {
-      notifyTutorApplicationRejected(user.expoPushToken).catch(() => {});
+      const { reason } = req.body;
+      notifyTutorApplicationRejected(user.expoPushToken, reason).catch(() => {});
     }
 
     res.json({

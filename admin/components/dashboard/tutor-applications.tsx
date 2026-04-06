@@ -31,7 +31,7 @@ export function TutorApplications() {
     queryKey: ['tutor-applications'],
     queryFn: async () => {
       const response = await api.get('/admin/tutors/pending')
-      return response.data
+      return response.data.data.applications
     },
   })
 

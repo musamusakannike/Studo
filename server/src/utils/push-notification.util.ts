@@ -149,12 +149,12 @@ export const notifyTutorApplicationApproved = (token: string) =>
     channelId: 'account',
   });
 
-export const notifyTutorApplicationRejected = (token: string) =>
+export const notifyTutorApplicationRejected = (token: string, reason?: string) =>
   sendPushNotification({
     to: token,
     title: '❌ Tutor Application Rejected',
-    body: 'Your tutor application was not approved. Your ₦20,000 application fee has been refunded to your wallet.',
-    data: { type: 'tutor_rejected' },
+    body: `Your tutor application was not approved${reason ? `: ${reason}` : ''}. Your ₦20,000 application fee has been refunded to your wallet.`,
+    data: { type: 'tutor_rejected', reason },
     channelId: 'account',
   });
 

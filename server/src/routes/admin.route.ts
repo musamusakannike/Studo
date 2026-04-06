@@ -10,8 +10,11 @@ router.use(authenticate, authorize('admin'));
 
 router.get('/users', adminController.getAllUsers);
 router.get('/tutor-applications', adminController.getTutorApplications);
+router.get('/tutors/pending', adminController.getTutorApplications);
 router.post('/tutor-applications/:userId/approve', adminController.approveTutorApplication);
+router.post('/tutors/:userId/approve', adminController.approveTutorApplication);
 router.post('/tutor-applications/:userId/reject', adminController.rejectTutorApplication);
+router.post('/tutors/:userId/reject', adminController.rejectTutorApplication);
 router.get('/courses', adminController.getAllCourses);
 router.patch('/courses/:courseId/toggle-status', adminController.toggleCourseStatus);
 router.get('/past-questions', adminController.getAllPastQuestions);
