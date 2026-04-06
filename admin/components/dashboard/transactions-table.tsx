@@ -29,7 +29,7 @@ export function TransactionsTable() {
       const response = await api.get('/admin/transactions', {
         params: { search, filter: filter !== 'all' ? filter : undefined },
       })
-      return response.data
+      return response.data.data.transactions
     },
   })
 

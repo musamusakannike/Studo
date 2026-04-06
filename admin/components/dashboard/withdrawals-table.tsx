@@ -38,7 +38,7 @@ export function WithdrawalsTable() {
     queryKey: ['withdrawals'],
     queryFn: async () => {
       const response = await api.get('/admin/withdrawals')
-      return response.data
+      return response.data.data.withdrawals
     },
   })
 

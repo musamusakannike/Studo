@@ -38,7 +38,7 @@ export function UsersTable() {
     queryKey: ['users', search],
     queryFn: async () => {
       const response = await api.get('/admin/users', { params: { search } })
-      return response.data
+      return response.data.data.users
     },
   })
 

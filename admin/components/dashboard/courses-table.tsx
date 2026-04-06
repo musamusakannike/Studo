@@ -38,7 +38,7 @@ export function CoursesTable() {
     queryKey: ['courses', search],
     queryFn: async () => {
       const response = await api.get('/admin/courses', { params: { search } })
-      return response.data
+      return response.data.data.courses
     },
   })
 
