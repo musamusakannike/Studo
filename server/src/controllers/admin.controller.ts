@@ -440,3 +440,102 @@ export const getDashboardStats = async (_req: AuthRequest, res: Response): Promi
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const getAnalytics = async (_req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    // const totalUsers = await User.countDocuments();
+    const activeStudents = await User.countDocuments({ role: 'user' });
+    const pendingTutorApplications = await User.countDocuments({ tutorApplicationStatus: 'pending' });
+    const pendingWithdrawals = await Withdrawal.countDocuments({ status: 'pending' });
+
+    // Calculate revenue from transactions
+    // Course purchases: platform takes a cut (e.g. 20%? or the full amount is total revenue)
+    // Tutors get earnings. Platform revenue is the difference.
+    
+    const courseSales = await Transaction.aggregate([
+      { $match: { purpose: 'course_purchase', status: 'success' } },
+      { $group: { _id: null, total: { $sum: '$amount' } } },
+    ]);
+
+    const pastQuestionSales = await Transaction.aggregate([
+      { $match: { purpose: 'pastquestion_purchase', status: 'success' } },
+      { $group: { _id: null, total: { $sum: '$amount' } } },
+    ]);
+
+    const tutorApplicationFees = await Transaction.aggregate([
+      { $match: { purpose: 'tutor_application', status: 'success' } },
+      { $group: { _id: null, total: { $sum: '$amount' } } },
+    ]);
+
+    const totalCourseRevenue = courseSales[0]?.total || 0;
+    const totalPQRevenue = pastQuestionSales[0]?.total || 0;
+    const totalAppFeeRevenue = tutorApplicationFees[0]?.total || 0;
+
+    const totalRevenue = totalCourseRevenue + totalPQRevenue + totalAppFeeRevenue;
+    
+    // Assume platform takes 30% of course revenue and 100% of PQ/App fees
+    const platformRevenue = (totalCourseRevenue * 0.3) + totalPQRevenue + totalAppFeeRevenue;
+
+    // Monthly revenue (last 6 months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+    sixMonthsAgo.setDate(1);
+
+    const monthlyRevenueRaw = await Transaction.aggregate([
+      {
+        $match: {
+          purpose: { $in: ['course_purchase', 'pastquestion_purchase', 'tutor_application'] },
+          status: 'success',
+          createdAt: { $gte: sixMonthsAgo },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            month: { $month: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          amount: { $sum: '$amount' },
+        },
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } },
+    ]);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthlyRevenue = monthlyRevenueRaw.map((item: any) => ({
+      month: monthNames[item._id.month - 1],
+      amount: item.amount,
+    }));
+
+    // Revenue by department (mapping courses to categories/departments if available)
+    // For now, let's just group by purpose
+    const revenueByDepartment = [
+      { department: 'Courses', amount: totalCourseRevenue },
+      { department: 'Past Questions', amount: totalPQRevenue },
+      { department: 'Tutor Apps', amount: totalAppFeeRevenue },
+    ];
+
+    // User distribution
+    const userDistribution = [
+      { role: 'Students', count: activeStudents },
+      { role: 'Tutors', count: await User.countDocuments({ role: 'tutor' }) },
+      { role: 'Admins', count: await User.countDocuments({ role: 'admin' }) },
+    ];
+
+    res.json({
+      success: true,
+      data: {
+        totalRevenue,
+        platformRevenue,
+        activeStudents,
+        pendingTutorApplications,
+        pendingWithdrawals,
+        monthlyRevenue,
+        revenueByDepartment,
+        userDistribution,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

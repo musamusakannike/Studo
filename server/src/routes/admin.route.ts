@@ -20,5 +20,6 @@ router.get('/transactions', adminController.getAllTransactions);
 router.get('/withdrawals', adminController.getAllWithdrawals);
 router.post('/withdrawals/:withdrawalId/process', validate(processWithdrawalSchema), adminController.processWithdrawal);
 router.get('/dashboard', adminController.getDashboardStats);
+router.get('/analytics', adminController.getAnalytics);
 
 export default router;

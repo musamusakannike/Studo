@@ -15,21 +15,29 @@ export const authenticate = async (
     const token = req.headers.authorization?.replace('Bearer ', '');
 
     if (!token) {
+      console.log('[Auth] No token provided');
       res.status(401).json({ success: false, message: 'Authentication required' });
       return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || '') as { userId: string };
-    const user = await User.findById(decoded.userId);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || '') as { userId: string };
+      const user = await User.findById(decoded.userId);
 
-    if (!user) {
-      res.status(401).json({ success: false, message: 'User not found' });
-      return;
+      if (!user) {
+        console.log(`[Auth] User not found for ID: ${decoded.userId}`);
+        res.status(401).json({ success: false, message: 'User not found' });
+        return;
+      }
+
+      req.user = user;
+      next();
+    } catch (jwtError: any) {
+      console.log(`[Auth] JWT Verification failed: ${jwtError.message}. Token: ${token.substring(0, 10)}...`);
+      res.status(401).json({ success: false, message: 'Invalid or expired token' });
     }
-
-    req.user = user;
-    next();
-  } catch (error) {
+  } catch (error: any) {
+    console.error(`[Auth] Middleware error: ${error.message}`);
     res.status(401).json({ success: false, message: 'Invalid or expired token' });
   }
 };

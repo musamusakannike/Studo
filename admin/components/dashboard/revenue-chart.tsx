@@ -12,7 +12,7 @@ export function RevenueChart() {
     queryKey: ['analytics'],
     queryFn: async () => {
       const response = await api.get('/admin/analytics')
-      return response.data
+      return response.data.data
     },
   })
 
