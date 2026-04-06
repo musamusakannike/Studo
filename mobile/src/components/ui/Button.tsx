@@ -1,6 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
-import { MotiView } from 'moti';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle, View } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useHaptics } from '../../hooks/useHaptics';
 import { spacing, borderRadius, fontSize, fontWeight } from '../../constants/spacing';
@@ -97,12 +96,7 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <MotiView
-      from={{ scale: 1 }}
-      animate={{ scale: 1 }}
-      transition={{ type: 'timing', duration: 150 }}
-    >
-      <TouchableOpacity
+    <TouchableOpacity
         onPress={handlePress}
         disabled={disabled || loading}
         activeOpacity={0.7}
@@ -122,7 +116,7 @@ export const Button: React.FC<ButtonProps> = ({
           <ActivityIndicator color={getTextColor()} />
         ) : (
           <>
-            {icon && <MotiView style={styles.icon}>{icon}</MotiView>}
+            {icon && <View style={styles.icon}>{icon}</View>}
             <Text
               style={[
                 styles.text,
@@ -137,8 +131,7 @@ export const Button: React.FC<ButtonProps> = ({
             </Text>
           </>
         )}
-      </TouchableOpacity>
-    </MotiView>
+    </TouchableOpacity>
   );
 };
 
@@ -150,6 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
+    fontFamily: 'PlusJakartaSans_600SemiBold',
     fontWeight: fontWeight.semibold,
     textAlign: 'center',
   },
