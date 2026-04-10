@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
-import { Search, BookOpen, FileQuestion, Star } from 'lucide-react-native';
+import { Search, BookOpen, FileQuestion, Star, Plus } from 'lucide-react-native';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '../../src/components/ui/Card';
 import { LoadingSpinner } from '../../src/components/ui/LoadingSpinner';
@@ -256,6 +256,15 @@ export default function ExploreScreen() {
           showsVerticalScrollIndicator={false}
         />
       )}
+      
+      {activeTab === 'pastQuestions' && (
+        <TouchableOpacity
+          style={[styles.fab, { backgroundColor: colors.primary }]}
+          onPress={() => router.push('/past-question/create' as any)}
+        >
+          <Plus size={iconSize.lg} color={colors.textInverse} />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }
@@ -397,5 +406,20 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     fontWeight: fontWeight.bold,
     marginLeft: 'auto',
+  },
+  fab: {
+    position: 'absolute',
+    bottom: spacing.xl,
+    right: spacing.xl,
+    width: 56,
+    height: 56,
+    borderRadius: borderRadius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
 });

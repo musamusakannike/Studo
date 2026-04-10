@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronRight,
   Award,
+  BookOpen
 } from 'lucide-react-native';
 import { Card } from '../../src/components/ui/Card';
 import { Button } from '../../src/components/ui/Button';
@@ -129,6 +130,17 @@ export default function ProfileScreen() {
                 style={styles.tutorButton}
               />
             )}
+            
+            {user?.role === 'tutor' && (
+              <Button
+                title="Create Course"
+                onPress={() => router.push('/tutor/create-course' as any)}
+                variant="primary"
+                size="sm"
+                icon={<BookOpen size={iconSize.xs} color={colors.textInverse} />}
+                style={styles.tutorButton}
+              />
+            )}
           </Card>
         </MotiView>
 
@@ -136,7 +148,7 @@ export default function ProfileScreen() {
           <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
             Preferences
           </Text>
-          <Card padding="none">
+          <Card padding="xs">
             <View style={styles.menuItem}>
               <View style={styles.menuItemLeft}>
                 {isDark ? (

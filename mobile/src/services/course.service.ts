@@ -42,4 +42,7 @@ export const courseService = {
 
   completeLesson: (courseId: string, lessonIndex: number) =>
     apiClient.post<ApiResponse<Enrollment>>(`/courses/${courseId}/lessons/${lessonIndex}/complete`),
+
+  createCourse: (data: any) =>
+    apiClient.post<ApiResponse<Course>>('/courses', data),
 };

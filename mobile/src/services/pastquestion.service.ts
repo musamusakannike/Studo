@@ -37,4 +37,7 @@ export const pastQuestionService = {
 
   getLeaderboard: (pastQuestionId: string) =>
     apiClient.get<ApiResponse<LeaderboardEntry[]>>(`/past-questions/${pastQuestionId}/leaderboard`),
+
+  createPastQuestion: (data: any) =>
+    apiClient.post<ApiResponse<PastQuestion>>('/past-questions', data),
 };

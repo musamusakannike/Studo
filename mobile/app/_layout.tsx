@@ -61,8 +61,10 @@ function RootLayoutNav() {
       <Stack.Screen name="course/[id]/lesson/[lessonIndex]/quiz" />
       <Stack.Screen name="past-question/[id]" />
       <Stack.Screen name="past-question/[id]/quiz" />
+      <Stack.Screen name="past-question/create" />
       <Stack.Screen name="wallet/withdraw" />
       <Stack.Screen name="tutor/apply" />
+      <Stack.Screen name="tutor/create-course" />
       <Stack.Screen name="index" />
     </Stack>
   );
